@@ -39,11 +39,28 @@ template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return
 //-------------------------------------------
 #define dump(x)  cerr << #x << " = " << (x) << endl;
 #define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
+int N = 0;
+int S = 0;
+int K = 0;
+int result = 0;
+int dfs(int k, int sum, int n) {
+    if (sum == S) {
+    }
+    return result;
+}
 
 int main() {
-  cin.tie(0);
-  ios::sync_with_stdio(false);
+    cin.tie(0);
+    ios::sync_with_stdio(false);
 
-
-  return 0;
+    int n, s;
+    while(1) {
+        cin >> n >> s;
+        N = n;
+        S = s;
+        if (cin.eof()) break;
+        dfs(0, 0, s);
+        cout << result << endl;
+    }
+    return 0;
 }
