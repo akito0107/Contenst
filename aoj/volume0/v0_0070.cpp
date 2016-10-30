@@ -49,40 +49,39 @@ void print_arr(int arr[10]) {
 int N = 0;
 int S = 0;
 int result = 0;
-int dfs(int used[10], int sum, int n) {
+int memo[1 << 10][332][11];
+int dfs(int used, int sum, int n) {
     if (sum < 0) return 0;
-    if (n == N + 1) {
-        if (sum == 0) {
-            return 1;
-        }
-        return 0;
+    if (n == N + 1) return sum == 0;
+
+    if (memo[used][sum][n] >= 0) {
+        return memo[used][sum][n];
     }
     int res = 0;
 
     for (int i = 0; i < 10; i++) {
-        if (!used[i]) {
-            int buf[10];
-            memcpy(buf, used, 10 * sizeof(int));
-            buf[i] = 1;
-            res += dfs(buf, sum - n * i, n + 1);
+        if ((used >> i) & 1) {
+            res += dfs(used&~(1 << i), sum - n * i, n + 1);
         }
     }
-
+    memo[used][sum][n] = res;
     return res;
 }
 
 int main() {
     cin.tie(0);
     ios::sync_with_stdio(false);
-
+    memset(memo, -1, sizeof(memo));
     int n, s;
-    int used[10] = {0};
     while(1) {
         cin >> n >> s;
-        N = n;
-        S = s;
         if (cin.eof()) break;
-        cout << dfs(used, S, 1) << endl;
+        N = n;
+        if (s >= 331) {
+            cout << 0 << endl;
+            continue;
+        }
+        cout << dfs((1 << 10) - 1, s, 1) << endl;
     }
     return 0;
 }
