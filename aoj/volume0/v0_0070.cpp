@@ -36,52 +36,39 @@ using namespace std;
 inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
 template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
 
-void print_arr(int arr[10]) {
-    cout << "----------------------------" << endl;
-    REP(i, 10) cout << arr[i] << ", ";
-    cout << endl;
-}
-
 //debug
 //-------------------------------------------
 #define dump(x)  cerr << #x << " = " << (x) << endl;
 #define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
 int N = 0;
-int S = 0;
-int result = 0;
-int memo[1 << 10][332][11];
+int memo[10][1 << 10][331];
 int dfs(int used, int sum, int n) {
     if (sum < 0) return 0;
-    if (n == N + 1) return sum == 0;
+    if (n == N) return sum == 0;
 
-    if (memo[used][sum][n] >= 0) {
-        return memo[used][sum][n];
-    }
+    if (~memo[n][used][sum]) return memo[n][used][sum];
+
     int res = 0;
 
     for (int i = 0; i < 10; i++) {
         if ((used >> i) & 1) {
-            res += dfs(used&~(1 << i), sum - n * i, n + 1);
+            res += dfs(used&~(1 << i), sum - ((1 + n) * i), n + 1);
         }
     }
-    memo[used][sum][n] = res;
+    memo[n][used][sum] = res;
     return res;
 }
 
 int main() {
     cin.tie(0);
     ios::sync_with_stdio(false);
-    memset(memo, -1, sizeof(memo));
     int n, s;
     while(1) {
         cin >> n >> s;
         if (cin.eof()) break;
         N = n;
-        if (s >= 331) {
-            cout << 0 << endl;
-            continue;
-        }
-        cout << dfs((1 << 10) - 1, s, 1) << endl;
+        memset(memo, -1, sizeof(memo));
+        cout << dfs((1 << 10) - 1, s, 0) << endl;
     }
     return 0;
 }
