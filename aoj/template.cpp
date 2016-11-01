@@ -40,6 +40,10 @@ template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return
 #define dump(x)  cerr << #x << " = " << (x) << endl;
 #define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
 
+//typedef
+//-------------------------------------------
+typedef long long ll;
+
 int main() {
   cin.tie(0);
   ios::sync_with_stdio(false);

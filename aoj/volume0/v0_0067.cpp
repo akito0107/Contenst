@@ -40,23 +40,25 @@ template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return
 #define dump(x)  cerr << #x << " = " << (x) << endl;
 #define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
 
-int island[12][12] = {0};
+vector<string> island(12);
 
 void dfs(int i, int j) {
-    island[i][j] = 0;
+    island[i][j] = '0';
 
-    if (i > 0 && island[i - 1][j]) {
-        dfs(i - 1, j);
-    }
-    if (i < 11 && island[i + 1][j]) {
+    if (i < 11 && island[i + 1][j] == '1') {
         dfs(i + 1, j);
     }
-    if (j < 11 && island[i][j + 1]) {
+    if (j < 11 && island[i][j + 1] == '1') {
         dfs(i, j + 1);
     }
-    if (j > 0 && island[i][j - 1]) {
+    if (j > 0 && island[i][j - 1] == '1') {
         dfs(i, j - 1);
     }
+    if (i > 0 && island[i - 1][j] == '1') {
+        dfs(i - 1, j);
+    }
+
+    return;
 }
 
 int main() {
@@ -64,19 +66,15 @@ int main() {
     ios::sync_with_stdio(false);
 
     while(1) {
-        memset(island, 0, sizeof(island));
-        if (cin.eof()) break;
         REP(i, 12) {
-            string line;
-            if (!(cin >> line)) {
-                break;
+            if (!(cin >> island[i])) {
+                return 0;
             }
-            REP(j, 12) island[i][j] = line[j] - '0';
         }
 
         int cnt = 0;
         REP(i, 12) REP(j, 12) {
-            if (island[i][j]) {
+            if (island[i][j] == '1') {
                 dfs(i, j);
                 cnt++;
             }
