@@ -22,7 +22,6 @@
 #include <string>
 #include <cstring>
 #include <ctime>
-#include <iterator>
 using namespace std;
 
 //repetition
@@ -34,43 +33,61 @@ using namespace std;
 //conversion
 //------------------------------------------
 inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
+inline double toDouble(string s) {double v; istringstream sin(s);sin>>v;return v;}
 template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return sout.str();}
+vector<string> split(const string &s, char delim) {
+    vector<string> elems;
+    string item;
+    for (char ch: s) {
+        if (ch == delim) {
+            if (!item.empty())
+                elems.push_back(item);
+            item.clear();
+        }
+        else {
+            item += ch;
+        }
+    }
+    if (!item.empty())
+        elems.push_back(item);
+    return elems;
+}
+
+int dp[11][10001];
+void dump_arr(int n, int m) {
+    REP(i, n) {
+        REP(j, m) cout << dp[i][j] << ",";
+        cout << endl;
+    }
+    cout << "----------------------" << endl;
+}
 
 //debug
 //-------------------------------------------
 #define dump(x)  cerr << #x << " = " << (x) << endl;
 #define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
-int N = 0;
-int memo[10][1 << 10][331];
-int dfs(int used, int sum, int n) {
-    if (sum < 0) return 0;
-    if (n == N) return sum == 0;
-    if (~memo[n][used][sum]) return memo[n][used][sum];
 
-    int res = 0;
-
-    for (int i = 0; i < 10; i++) {
-        if ((used >> i) & 1) { // 0かどうかをチェック
-            res += dfs(used&~(1 << i), sum - ((1 + n) * i), n + 1);
-            // 対象のビットまでシフト
-            // 0001000を11101111に反転
-            // &を取って対象のビットを0に変換
-        }
-    }
-    memo[n][used][sum] = res;
-    return res;
-}
+int s, n;
 
 int main() {
     cin.tie(0);
     ios::sync_with_stdio(false);
-    int n, s;
     while(1) {
+        memset(dp, 0, sizeof(dp));
+        dp[0][0] = 1;
+        dp[1][0] = 1;
         cin >> n >> s;
-        if (cin.eof()) break;
-        N = n;
-        memset(memo, -1, sizeof(memo));
-        cout << dfs((1 << 10) - 1, s, 0) << endl;
+        REP(k, 10) {
+            FORR(i, n + 1, 0) {
+                FOR(j, 0, s + 1) {
+                    if (j >= k * i)
+                        dp[i][j] += dp[i - 1][j - k * i];
+                }
+            }
+            dump_arr(n + 1, s + 1);
+        }
+        cout << dp[n][s] << endl;
     }
+
     return 0;
 }
