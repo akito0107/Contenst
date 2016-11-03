@@ -57,36 +57,22 @@ Pair solve(int idx, int used, int w) {
     Pair result(0, vector<int>());
     result.second.push_back(s[idx]);
 
-    if (used == 0) return res;
-    if(dp[idx][used].first != INF) return dp[idx][used];
+    if (used == 0) return result;
+    if (dp[idx][used].first != INF) return dp[idx][used];
 
+    result.first = INF;
     FOR(i, 1, N + 1) {
         if((used>>i)&1) {
-            Pair tmp = solve(i, used&~(1<<(i - 1)), w + w[i] * 20);
+            Pair tmp = solve(i, used&~(1<<(i - 1)), w + v[i] * 20);
             tmp.first += abs(d[i] - d[idx]) / (2000.0 / (70 + w));
             if (result.first > tmp.first) {
-                res = tmp;
+                result = tmp;
             }
         }
     }
 
-    res.second.insert(res.second.begin(), s[idx]);
-    return dp[idx][used] = res;
-}
-
-int dfs(int c, int n, int w, int m, int broked) {
-    if (c == N) return m;
-
-    int res = numeric_limits<int>::max();
-    FOR(i, 1, N + 1) {
-        if ((broked>>i) & 1) {
-            int dist = n != 0 ? abs(d[n] - d[i]) : d[i];
-            int weight = n != 0 ? v[n] * 20 : 0;
-            int minutes = n != 0 ? dist / (2000 / (70 + w + weight)) : 0;
-            res = min(res, dfs(c + 1, i, w + weight, m + minutes, broked&~(1<<i)));
-        }
-    }
-    return res;
+    result.second.insert(result.second.begin(), s[idx]);
+    return dp[idx][used] = result;
 }
 
 int main() {
@@ -96,12 +82,19 @@ int main() {
     cin >> N;
     int init = (1<<15) - 1;
     FOR(i, 1, N + 1) cin >> s[i] >> d[i] >> v[i];
-    memset(dp, -1, sizeof(dp));
     FOR(i, 1, N + 1) {
-        dp[0][used&~(1<<(i - 1))] = Pair(0, vector<int>(1, i));
+        FOR(j, 1, N + 1) {
+            dp[i][j] = Pair(INF, vector<int>());
+        }
     }
-    int res = dfs(0, 0, 0, 0, init);
-    cout << res << endl;
+    Pair ans(INF, vector<int>());
+    FOR(i, 1, N + 1) {
+        Pair tmp = solve(i, init&~(1<<i), v[i] * 20);
+        if (ans.first > tmp.first) ans = tmp;
+    }
+
+    REP(i, N - 1) cout << ans.second[i] << " ";
+    cout << ans.second[N - 1] << endl;
 
     return 0;
 }
