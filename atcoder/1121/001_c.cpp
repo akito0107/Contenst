@@ -136,7 +136,6 @@ int main() {
         return 0;
     }
 
-
     double wd = (double)w / 60;
     wd = (round(wd * 10)) / 10;
     w = print_wind(wd);
@@ -146,8 +145,7 @@ int main() {
         return 0;
     }
 
-    d = round((double)d / 100) * 100;
-    print_dist(d/10);
+    print_dist((double)d/10);
     cout << " ";
     cout << w << endl;
 
