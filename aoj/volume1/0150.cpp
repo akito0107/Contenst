@@ -22,7 +22,6 @@
 #include <string>
 #include <cstring>
 #include <ctime>
-#include <iterator>
 using namespace std;
 
 //repetition
@@ -40,37 +39,40 @@ template<class T> inline string toString(T x) {ostringstream sout;sout<<x;return
 //-------------------------------------------
 #define dump(x)  cerr << #x << " = " << (x) << endl;
 #define debug(x) cerr << #x << " = " << (x) << " (L" << __LINE__ << ")" << " " << __FILE__ << endl;
-int N = 0;
-int memo[10][1 << 10][331];
-int dfs(int used, int sum, int n) {
-    if (sum < 0) return 0;
-    if (n == N) return sum == 0;
-    if (~memo[n][used][sum]) return memo[n][used][sum];
 
-    int res = 0;
+//typedef
+//-------------------------------------------
+typedef long long ll;
 
-    for (int i = 0; i < 10; i++) {
-        if ((used >> i) & 1) { // 0かどうかをチェック
-            res += dfs(used&~(1 << i), sum - ((1 + n) * i), n + 1);
-            // 対象のビットまでシフト
-            // 0001000を11101111に反転
-            // &を取って対象のビットを0に変換
-        }
+int memo[10001];
+int isprime(int x) {
+    if (x < 0 ) return 0;
+    if (x == 2) return 1;
+    if (x % 2 == 0) return 0;
+
+    int l = (int)sqrt(x);
+    for (int i = 3; i <= l; i += 2) {
+        if (x % i == 0) return 0;
     }
-    memo[n][used][sum] = res;
-    return res;
+
+    return 1;
 }
 
 int main() {
     cin.tie(0);
     ios::sync_with_stdio(false);
-    int n, s;
+
+    int m;
     while(1) {
-        cin >> n >> s;
-        if (cin.eof()) break;
-        N = n;
-        memset(memo, -1, sizeof(memo));
-        cout << dfs((1 << 10) - 1, s, 0) << endl;
+        cin >> m;
+        if (m == 0) break;
+        FORR(j, m, 0) {
+            if (isprime(j) && isprime(j - 2)) {
+                cout << j - 2 << " " << j << endl;
+                break;
+            }
+        }
     }
+
     return 0;
 }
