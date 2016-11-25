@@ -30,6 +30,8 @@ using namespace std;
 #define FORR(i,a,b) for(int i=(a);i>(b);i--)
 #define REP(i,n)  FOR(i,0,n)
 
+#define INF (1<<21)
+
 //conversion
 //------------------------------------------
 inline int toInt(string s) {int v; istringstream sin(s);sin>>v;return v;}
