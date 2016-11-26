@@ -56,14 +56,14 @@ vector<int> result;
 int s, d;
 
 int dfs(int now, int parent, int cost) {
-    visited[now] += 1;
+    visited[now] = VISITED;
     if (now == d) return cost;
 
     int test = 0;
     int tmp = INF;
     int mini = -1;
     REP(i, 10) {
-        if(g[now][i] != INF && visited[i] != 2) {
+        if(g[now][i] != INF && visited[i] != VISITED) {
             if (parent == 9 && now == 5 && i == 6) continue;
             int r = dfs(i, now, cost + 1);
             if (tmp > r) {
@@ -95,6 +95,22 @@ int main() {
         REP(i, 10) visited[i] = NOT_VISITED;
         if (!n) return 0;
         cin >> s >> d;
+
+        if (s > 6 && d > 5 && s > d) {
+            cout << s << " ";
+            for (int k = s + 1; k <= 9; k++) {
+                cout << k << " ";
+            }
+            FORR(i, 5, -1) cout << i << " ";
+            FOR(i, 1, 6) cout << i << " ";
+
+            for (int k = 6; k < d; k++) {
+                cout << k << " ";
+            }
+            cout << d << endl;
+            continue;
+        }
+
         result.clear();
         dfs(s, -1, 0);
         reverse(result.begin(), result.end());
